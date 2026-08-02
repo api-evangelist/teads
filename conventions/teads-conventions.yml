@@ -1,0 +1,53 @@
+generated: '2026-07-21'
+method: searched
+source: https://developers.teads.com/
+description: >-
+  Cross-cutting API conventions for the Teads developer surfaces, derived from the
+  developer portal and partner integration guides. Teads publishes no OpenAPI
+  document, so semantics below reflect documented behavior only.
+auth:
+  style: api-key
+  detail: >-
+    Conversions API uses a Conversion API Token; In-Chat API uses a Partner API
+    Key passed as the `key` query parameter. See authentication/teads-authentication.yml.
+transport:
+  format: json
+  in_chat_api:
+    method: POST
+    endpoint: https://mv.outbrain.com/Multivac/api/in-chat-recs
+    required_headers:
+    - User-Agent
+    - X-Forwarded-For
+  conversions_api:
+    base: https://ca.teads.tv
+    version: v1
+identity_and_tracing:
+  first_party_cookies:
+  - tfpai   # carries auctid (event/click id)
+  - tfpvi   # user identifier
+  - tfpsi   # user session id
+  event_id_field: auctid
+versioning:
+  in_chat_api: "explicit version field in request/response payload (e.g. 2.0)"
+  conversions_api: "path/label version v1"
+  sdks: semver per platform (iOS/Android/React Native/Flutter)
+pagination:
+  documented: false
+  note: No paginated collection endpoints are documented on the public surface.
+idempotency:
+  documented: false
+  note: >-
+    No idempotency key or replay-safe semantics are documented; conversion events
+    carry a client-supplied event id (auctid) that can act as a de-duplication key
+    but Teads does not document guaranteed idempotent processing.
+rate_limits:
+  documented: false
+error_envelope:
+  documented: false
+  note: >-
+    In-Chat API returns JSON keyed by recommendation engine type; no RFC 9457
+    problem+json error envelope is documented.
+cross_links:
+  authentication: authentication/teads-authentication.yml
+  lifecycle: lifecycle/teads-lifecycle.yml
+  changelog: changelog/teads-changelog.yml

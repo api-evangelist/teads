@@ -1,0 +1,32 @@
+generated: '2026-07-21'
+method: searched
+source: https://developers.teads.com/
+description: >-
+  Authentication profile for Teads developer APIs. Both public REST surfaces use
+  static API-key style credentials issued out-of-band (via Teads Ad Manager or a
+  Teads account representative); no OAuth 2.0 or OpenID Connect flow is documented.
+apis:
+- name: Teads Conversions API
+  schemes:
+  - type: apiKey
+    name: Conversion API Token
+    in: token
+    location: request payload / connector config
+    provisioning: >-
+      Generated in Teads Ad Manager under Settings > Conversion API Tokens >
+      Generate Conversion API Token. Shown once; must be stored securely.
+    docs: https://docs.tealium.com/server-side-connectors/teads-conversions-connector/
+- name: Teads In-Chat API
+  schemes:
+  - type: apiKey
+    name: key
+    in: query
+    provisioning: >-
+      Unique Partner API Key obtained from a Teads account representative and
+      passed as the `key` request parameter. Requests also require User-Agent and
+      X-Forwarded-For headers carrying the end-user agent and IP.
+    docs: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+notes: >-
+  No OpenAPI document is published by Teads, so this profile is derived from the
+  developer portal and partner integration documentation rather than a machine
+  spec.

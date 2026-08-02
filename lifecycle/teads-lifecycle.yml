@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/teads/TeadsSDK-android/releases
+description: >-
+  Lifecycle, versioning, and deprecation posture for Teads developer surfaces,
+  observed from SDK release notes and the developer portal. Teads versions its
+  SDKs with semver and communicates deprecations in-code and via release notes;
+  no formal RFC 8594 Sunset/Deprecation HTTP header policy is documented for the
+  REST APIs.
+versioning:
+  sdks: semver per platform
+  in_chat_api: explicit payload version (2.0)
+  conversions_api: labeled v1
+deprecation:
+  policy_documented: partial
+  mechanism: >-
+    SDK constructors and configs are marked deprecated in release notes ahead of
+    removal (e.g. Android TeadsAdPlacementRecommendationsConfig(articleUrl,
+    widgetId) deprecated in favor of URL/Platform config constructors).
+  examples:
+  - component: TeadsSDK-android
+    deprecated: TeadsAdPlacementRecommendationsConfig(articleUrl, widgetId)
+    replacement: TeadsAdPlacementRecommendationsURLConfig / TeadsAdPlacementRecommendationsPlatformConfig
+sla:
+  documented: false
+status_page:
+  documented: false
+support:
+  url: https://support.teads.tv/

@@ -1,0 +1,33 @@
+generated: '2026-07-21'
+method: derived
+source: https://developers.teads.com/
+description: >-
+  Conformance assertions for Teads developer APIs against common cross-cutting
+  standards. Derived from the developer portal and adtech context; Teads publishes
+  no OpenAPI, so most machine-standard conformance is not evidenced.
+standards:
+- id: oauth2
+  conforms: false
+  evidence: APIs use static API-key tokens, not OAuth 2.0.
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect discovery or flow documented.
+- id: rfc9457
+  conforms: false
+  evidence: No application/problem+json error envelope documented.
+- id: rfc8594
+  conforms: false
+  evidence: No Sunset/Deprecation HTTP header policy documented for REST surfaces.
+- id: idempotency
+  conforms: false
+  evidence: No idempotency-key semantics documented.
+- id: iab-openrtb
+  conforms: partial
+  evidence: >-
+    In-Chat API targeting uses IAB content categories; Teads participates in IAB
+    Tech Lab standards (OM SDK, OpenRTB ecosystem) as an adtech platform.
+- id: iab-om-sdk
+  conforms: true
+  evidence: >-
+    Mobile SDKs integrate the IAB OM SDK (e.g. Android upgraded to 1.6.5-iab382
+    for 2026 viewability/measurement certification).

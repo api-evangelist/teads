@@ -1,0 +1,56 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/teads
+description: >-
+  First-party Teads client SDKs for building premium outstream ad inventory in
+  mobile and cross-platform apps. Distributed via CocoaPods, Swift Package Manager,
+  the Teads Artifactory Maven repository, and npm. Discovered on the verified
+  github.com/teads organization and package registries.
+packages:
+- name: TeadsSDK
+  ecosystem: cocoapods
+  official: true
+  language: Swift/Objective-C
+  registry: https://cocoapods.org/pods/TeadsSDK
+  repository: https://github.com/teads/TeadsSDK-iOS
+  install: "pod 'TeadsSDK'"
+  notes: iOS outstream ad SDK; also available via Swift Package Manager.
+- name: TeadsSDK-iOS (SPM)
+  ecosystem: swift
+  official: true
+  language: Swift
+  registry: https://swiftpackageregistry.com/teads/TeadsSDK-iOS
+  repository: https://github.com/teads/TeadsSDK-iOS
+  install: "https://github.com/teads/TeadsSDK-iOS"
+- name: tv.teads.sdk:sdk
+  ecosystem: maven
+  official: true
+  language: Kotlin/Java
+  registry: https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod
+  repository: https://github.com/teads/TeadsSDK-android
+  install: "implementation('tv.teads.sdk:sdk:X.Y.Z')"
+  notes: Hosted in the Teads JFrog Artifactory Maven repo, not Maven Central.
+- name: TeadsSDK-ReactNative
+  ecosystem: npm
+  official: true
+  language: TypeScript
+  repository: https://github.com/teads/TeadsSDK-ReactNative
+  notes: React Native >= 0.78.0, New Architecture/Fabric required.
+- name: TeadsSDK-flutter
+  ecosystem: pub
+  official: true
+  language: Dart
+  repository: https://github.com/teads/TeadsSDK-flutter
+adapters:
+- name: TeadsSDK-adapter-admob-ios
+  official: true
+  repository: https://github.com/teads/TeadsSDK-adapter-admob-ios
+  notes: Google AdMob mediation adapter (iOS).
+tag_manager_templates:
+- name: teads-gtm-template
+  official: true
+  repository: https://github.com/teads/teads-gtm-template
+- name: teads-advertiser-conversion-api-gtm-template
+  official: true
+  repository: https://github.com/teads/teads-advertiser-conversion-api-gtm-template
+  notes: Server-side GTM template for the Teads Conversions API.

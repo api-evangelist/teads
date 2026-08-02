@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: derived from developers.teads.com documented REST operations
+description: >-
+  No official hosted or remote Teads MCP server was found (searched the MCP
+  registry, github.com/teads, and the developer portal as of 2026-07-21). The
+  following is a CANDIDATE tool surface derived from Teads' two documented public
+  REST APIs, provided as a design sketch only. Not published by Teads.
+server:
+  official: false
+  hosted: false
+tools:
+- name: get_in_chat_recommendations
+  derived_from: POST https://mv.outbrain.com/Multivac/api/in-chat-recs
+  description: >-
+    Retrieve contextual sponsored/organic ad recommendations for a chatbot or LLM
+    surface given chat context, keywords, and IAB categories.
+  auth: Partner API Key (key)
+- name: send_conversion_event
+  derived_from: Teads Conversions API (https://ca.teads.tv, v1)
+  description: >-
+    Send a server-side advertiser conversion event (Purchase, AddToCart, Lead,
+    ViewContent, InitiateCheckout, etc.) with pixel id, event time, value and
+    currency.
+  auth: Conversion API Token

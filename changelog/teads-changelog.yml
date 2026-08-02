@@ -1,0 +1,39 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/teads/TeadsSDK-iOS/releases
+description: >-
+  Change history for the Teads developer surfaces. Teads does not publish a
+  unified API changelog; version history is tracked per-SDK via GitHub Releases.
+  This captures the iOS SDK release stream plus a recent Android SDK change as a
+  representative sample.
+scheme: semver-per-sdk
+sources:
+- ios: https://github.com/teads/TeadsSDK-iOS/releases
+- android: https://github.com/teads/TeadsSDK-android/releases
+current_versions:
+  ios: 6.2.0
+entries:
+- component: TeadsSDK-iOS
+  version: 6.2.0
+  date: '2024-06-23'
+  breaking: false
+  highlights: Maintenance release.
+- component: TeadsSDK-iOS
+  version: 6.1.0
+  date: '2024-06-03'
+  breaking: false
+  highlights: Feature release.
+- component: TeadsSDK-iOS
+  version: 6.0.11
+  date: '2024-04-06'
+  breaking: false
+  highlights: Restored Swift Package Manager support for mediation adapters.
+- component: TeadsSDK-android
+  version: recent
+  date: '2026'
+  breaking: false
+  highlights: >-
+    Added TeadsAdPlacementRecommendationsURLConfig /
+    TeadsAdPlacementRecommendationsPlatformConfig constructors; deprecated the
+    older TeadsAdPlacementRecommendationsConfig(articleUrl, widgetId) constructor.
+    OM SDK upgraded to 1.6.5-iab382 for 2026 measurement certification.

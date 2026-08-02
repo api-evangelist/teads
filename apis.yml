@@ -1,8 +1,15 @@
 aid: teads
 name: Teads
-description: Teads is a company surfaced as a portfolio company of lightspeed-venture-partners and added
-  to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: >-
+  Teads is an omnichannel advertising technology platform (combined with Outbrain
+  since 2024) that helps brands reach audiences across video, display, CTV, and
+  conversational surfaces on 10,000+ premium publisher properties in 50+ markets.
+  For developers and advertisers Teads exposes a server-side Conversions API for
+  privacy-safe conversion event delivery, an In-Chat Recommendations API (V2.0)
+  for injecting contextual ad recommendations into chatbots and LLM experiences,
+  and first-party mobile ad SDKs for iOS, Android, React Native, and Flutter used
+  to build premium outstream inventory inside apps. This profile catalogs those
+  developer-facing surfaces for API discovery.
 url: https://raw.githubusercontent.com/api-evangelist/teads/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,14 +17,115 @@ x-backed-by:
 - lightspeed-venture-partners
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: open
+  trial: false
+  try_now: false
+  public: true
+  label: Open access
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
+image: https://www.teads.com/wp-content/themes/teads/assets/img/teads-logo.svg
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Advertising
+- AdTech
+- Advertising Technology
+- Video Advertising
+- Conversions API
+- Contextual Advertising
+- Mobile SDK
+- Conversational AI
+apis:
+- name: Teads Conversions API
+  description: >-
+    Server-side API for sending advertiser conversion events (Purchase, AddToCart,
+    Lead, ViewContent, etc.) to Teads for measurement and optimization, using a
+    Conversion API Token generated in Teads Ad Manager. Complements the browser
+    Teads Pixel with first-party cookie identifiers (tfpai/tfpvi/tfpsi).
+  humanURL: https://developers.teads.com/
+  baseURL: https://ca.teads.tv
+  tags:
+  - Conversions
+  - Measurement
+  - Server-Side Events
+  properties:
+  - type: Documentation
+    url: https://developers.teads.com/
+  - type: x-integration-guide
+    url: https://docs.tealium.com/server-side-connectors/teads-conversions-connector/
+- name: Teads In-Chat API
+  description: >-
+    V2.0 REST API that lets chatbot and LLM publishers programmatically retrieve
+    contextually relevant sponsored and organic ad recommendations and inject them
+    into conversational interfaces, authenticated with a Partner API Key and
+    driven by chat context, keywords, and IAB categories.
+  humanURL: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+  baseURL: https://mv.outbrain.com/Multivac/api/in-chat-recs
+  tags:
+  - Recommendations
+  - Contextual
+  - Conversational AI
+  properties:
+  - type: Documentation
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+  - type: GettingStarted
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/
+common:
+- type: VulnerabilityDisclosure
+  url: security/teads-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/teads-domain-security.yml
+- type: Security
+  url: security/teads-vulnerability-disclosure.yml
+- type: Packages
+  url: packages/teads-packages.yml
+- type: SDKs
+  url: packages/teads-packages.yml
+- type: WellKnown
+  url: well-known/teads-well-known.yml
+- type: Authentication
+  url: authentication/teads-authentication.yml
+- type: Conventions
+  url: conventions/teads-conventions.yml
+- type: MCPServer
+  url: mcp/teads-mcp.yml
+- type: LLMsTxt
+  url: llms/teads-llms.txt
+- type: Lifecycle
+  url: lifecycle/teads-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/teads-lifecycle.yml
+- type: ChangeLog
+  url: changelog/teads-changelog.yml
+- type: Conformance
+  url: conformance/teads-conformance.yml
+- type: DeveloperPortal
+  url: https://developers.teads.com/
+- type: Documentation
+  url: https://developers.teads.com/
+- type: Website
+  url: https://www.teads.com/
+- type: Support
+  url: https://support.teads.tv/
+- type: GitHubOrganization
+  url: https://github.com/teads
+- type: Blog
+  url: https://www.teads.com/blog/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 11
+  pass: local-v1
