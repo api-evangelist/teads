@@ -32,7 +32,7 @@ accessModel:
 specificationVersion: '0.20'
 image: https://www.teads.com/wp-content/themes/teads/assets/img/teads-logo.svg
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-13'
 tags:
 - Company
 - Advertising
@@ -78,6 +78,16 @@ apis:
     url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
   - type: GettingStarted
     url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/
+  - type: APIReference
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+  - type: x-examples
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/examples/
+  - type: x-privacy-guide
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/privacy-guide/
+  - type: x-settings-reference
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+  - type: ChangeLog
+    url: https://developers.teads.com/docs/Chatbot-AI-SDK/News/release-notes/
 common:
 - type: VulnerabilityDisclosure
   url: security/teads-vulnerability-disclosure.yml
@@ -95,10 +105,24 @@ common:
   url: authentication/teads-authentication.yml
 - type: Conventions
   url: conventions/teads-conventions.yml
-- type: MCPServer
-  url: mcp/teads-mcp.yml
 - type: LLMsTxt
   url: llms/teads-llms.txt
+- type: SecurityTxt
+  url: well-known/teads-security.txt
+- type: TrustCenter
+  url: security/teads-trust-center.yml
+- type: Compliance
+  url: security/teads-trust-center.yml
+- type: Sandbox
+  url: sandbox/teads-sandbox.yml
+- type: RateLimits
+  url: rate-limits/teads-rate-limits.yml
+- type: Plans
+  url: plans/teads-plans-pricing.yml
+- type: Components
+  url: components/teads-components.yml
+- type: DataModel
+  url: data-model/teads-data-model.yml
 - type: Lifecycle
   url: lifecycle/teads-lifecycle.yml
 - type: Deprecation
@@ -111,6 +135,10 @@ common:
   url: https://developers.teads.com/
 - type: Documentation
   url: https://developers.teads.com/
+- type: APIReference
+  url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+- type: GettingStarted
+  url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/
 - type: Website
   url: https://www.teads.com/
 - type: Support
@@ -119,13 +147,19 @@ common:
   url: https://github.com/teads
 - type: Blog
   url: https://www.teads.com/blog/
+- type: Login
+  url: https://login.teads.tv/login
+- type: TermsOfService
+  url: https://www.teads.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://www.teads.com/privacy-policy/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-enrichment:
-  date: '2026-07-21'
+  date: '2026-08-13'
   status: enriched
-  artifacts_added: 11
+  artifacts_added: 8
   pass: local-v1
