@@ -1,32 +1,116 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
-source: https://developers.teads.com/
+source: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
 description: >-
-  Authentication profile for Teads developer APIs. Both public REST surfaces use
-  static API-key style credentials issued out-of-band (via Teads Ad Manager or a
-  Teads account representative); no OAuth 2.0 or OpenID Connect flow is documented.
+  Authentication profile for the Teads developer APIs. Both public REST surfaces
+  use static, long-lived API-key style credentials issued out of band — via Teads
+  Ad Manager or a Teads account representative. No OAuth 2.0, OpenID Connect,
+  mTLS, JWT, signing scheme, scope model, expiry or documented rotation path
+  exists on any surface, and there is no self-serve credential issuance.
 apis:
 - name: Teads Conversions API
+  base: https://ca.teads.tv
   schemes:
   - type: apiKey
     name: Conversion API Token
     in: token
-    location: request payload / connector config
+    location: request payload / connector configuration
     provisioning: >-
       Generated in Teads Ad Manager under Settings > Conversion API Tokens >
       Generate Conversion API Token. Shown once; must be stored securely.
+    rotation: not documented
+    expiry: not documented
+    scopes: none
     docs: https://docs.tealium.com/server-side-connectors/teads-conversions-connector/
-- name: Teads In-Chat API
+  companion_identifiers:
+    note: >-
+      Server-side events are correlated with browser activity through Teads
+      first-party cookies rather than an auth mechanism.
+    cookies:
+    - tfpai (carries auctid, the event/click id)
+    - tfpvi (user identifier)
+    - tfpsi (user session id)
+- name: Teads In-Chat Recommendations API
+  base: https://mv.outbrain.com/Multivac/api/in-chat-recs
   schemes:
   - type: apiKey
     name: key
     in: query
     provisioning: >-
-      Unique Partner API Key obtained from a Teads account representative and
-      passed as the `key` request parameter. Requests also require User-Agent and
-      X-Forwarded-For headers carrying the end-user agent and IP.
+      Unique Partner API Key obtained from a Teads account representative,
+      alongside an approved Widget ID (e.g. APP_12). Passed as the `key` query
+      parameter.
+    rotation: not documented
+    expiry: not documented
+    scopes: none
+    env_var: TEADS_API_KEY
     docs: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+    risk: >-
+      A credential in the query string is written to proxy, CDN and server access
+      logs and to browser referrer chains. Teads' own settings page tells
+      integrators to keep the key in environment variables or secrets management
+      and never to hardcode it client-side, but the transport itself puts it in
+      the URL. A header-based credential would be the single largest security
+      improvement available on this surface.
+  required_request_context:
+    note: >-
+      Not authentication, but mandatory alongside it — the caller must forward
+      the END USER's context rather than the server's, and the API is documented
+      to depend on it for geo-compliance and fraud prevention.
+    headers:
+    - name: User-Agent
+      value: the end user's agent string
+    - name: X-Forwarded-For
+      value: the end user's masked or full IP address
+  consent_parameters:
+    note: >-
+      Requests carry regulatory consent signals in addition to the credential;
+      absent or malformed values affect eligibility, not authentication.
+    parameters:
+    - name: api_consent
+      requirement: recommended
+      detail: Set to 1 when the host app has obtained user consent.
+    - name: cnsntv2
+      requirement: required in the EU
+      detail: IAB TCF v2.0 consent string.
+    docs: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/privacy-guide/
+- name: Teads Ad Manager (console)
+  base: https://login.teads.tv/login
+  schemes:
+  - type: interactive
+    name: Teads Ad Manager login
+    note: >-
+      Human console login where Conversion API Tokens are generated. No public
+      API for credential management is documented.
+mobile_sdk_credentials:
+  note: >-
+    The mobile SDKs are not authenticated with a secret. Placement identity is
+    the credential surface.
+  identifiers:
+  - pid (Teads placement id, numeric)
+  - widgetId + installationKey (Feed / Recommendations placements)
+  test_values: see sandbox/teads-sandbox.yml
+absent:
+  oauth2: true
+  oidc: true
+  mutual_tls: true
+  jwt: true
+  request_signing: true
+  scopes: true
+  token_expiry: true
+  documented_rotation: true
+  self_serve_issuance: true
+  well_known_discovery: >-
+    /.well-known/openid-configuration and /.well-known/oauth-authorization-server
+    return 404 on developers.teads.com, ca.teads.tv and mv.outbrain.com.
 notes: >-
-  No OpenAPI document is published by Teads, so this profile is derived from the
-  developer portal and partner integration documentation rather than a machine
-  spec.
+  No OpenAPI document is published by Teads, so this profile is transcribed from
+  the developer portal, the In-Chat API settings/privacy pages and partner
+  integration documentation rather than from securitySchemes in a machine spec.
+  scopes/ is intentionally not emitted for this provider — there is no OAuth
+  surface for scopes to describe.
+cross_links:
+  conventions: conventions/teads-conventions.yml
+  scopes: null
+  security: security/teads-trust-center.yml
+checked: '2026-08-13'

@@ -1,0 +1,102 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.teads.com/
+description: >-
+  Client-side and embeddable surfaces Teads ships for developers. Unlike a
+  typical SaaS component library these are ad-rendering components delivered
+  through platform SDKs plus one server-returned HTML embed, and a hosted
+  reporting dashboard. Grouped by family below; the distributable artifacts
+  themselves are catalogued in packages/teads-packages.yml.
+families:
+- family: Mobile ad placements (iOS / Android / React Native / Flutter)
+  loader: Teads SDK — Teads.createPlacement() unified placement interface (SDK 6.0.0+)
+  components:
+  - name: TeadsAdPlacementMedia
+    kind: in-read video ad view
+    platforms: [iOS, Android]
+  - name: TeadsAdPlacementMediaNative
+    kind: native ad with custom app-supplied rendering
+    platforms: [iOS, Android]
+  - name: TeadsAdPlacementBanner
+    kind: anchored banner with adaptive height driven by the JS engine
+    platforms: [iOS, Android]
+    since: 6.2.0
+  - name: TeadsAdPlacementFeed
+    kind: content recommendation widget (feed)
+    platforms: [iOS, Android]
+    since: 6.0.0
+  - name: TeadsAdPlacementRecommendations
+    kind: programmatic content recommendations placement
+    platforms: [iOS, Android]
+    since: 6.0.0
+    config_classes:
+    - TeadsAdPlacementRecommendationsURLConfig
+    - TeadsAdPlacementRecommendationsPlatformConfig
+    - TeadsAdPlacementRecommendationsConfig (deprecated 6.2.0)
+  - name: Interstitial placement
+    kind: fullscreen interstitial via AdMob / GAM mediation
+    platforms: [iOS, Android]
+    since: 6.1.0
+  features:
+  - Jetpack Compose support (Android, LazyColumn and Column)
+  - Dark mode via toggleDarkMode() / config parameter
+  - Explore More (additional content on navigate-away)
+  - Creative resize
+  events: TeadsAdPlacementEventsDelegate / TeadsAdPlacementEventsListener
+  source: https://developers.teads.com/docs/Android-SDK/Getting-Started/release-notes/
+- family: In-Chat / conversational ad embed
+  loader: server-returned HTML in the API response
+  components:
+  - name: display
+    kind: HTML/script embed returned by the In-Chat Recommendations API
+    returned_when: response_types includes BrandDisplay
+    fields: [html, div_id, placement_id, width, height, outiframe_allowed, om]
+    note: >-
+      The integrator injects the returned html into a container element
+      identified by div_id. width=1 signals fluid/responsive.
+  - name: document card
+    kind: publisher-rendered recommendation card
+    fields: [thumbnail_url, content, source_display_name, cta, url]
+    note: >-
+      Teads returns the assets; the conversational surface renders them natively
+      in its own chat UI. There is no Teads-supplied web component for this.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+- family: Mediation adapters (embed Teads inside another ad stack)
+  components:
+  - name: AdMob adapter (banner, in-read, interstitial, native)
+    platforms: [iOS, Android]
+  - name: AppLovin adapter (in-read, native)
+    platforms: [iOS, Android]
+  - name: Smart / Equativ adapter (in-read, native)
+    platforms: [iOS, Android]
+  - name: Prebid custom plugin / custom Prebid integration
+    platforms: [iOS, Android]
+  source: https://developers.teads.com/docs/category/mediation
+- family: Hosted dashboards and tag templates
+  components:
+  - name: Teads Conversational AI Ads reporting dashboard
+    kind: hosted embedded reporting surface
+    capabilities:
+    - Revenue / Impressions / Clicks / CTR KPIs
+    - Breakdowns by App, Placement, Format, Country, Device, OS, SDK version
+    - Organic vs paid segmentation, ad/URL/advertiser blocking
+    - Export CSV / XLSX / JSON, scheduled email reports, reporting API access
+    source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/Dashboard/
+  - name: teads-gtm-template
+    kind: Google Tag Manager web template
+    repository: https://github.com/teads/teads-gtm-template
+  - name: teads-advertiser-conversion-api-gtm-template
+    kind: server-side GTM template for the Conversions API
+    repository: https://github.com/teads/teads-advertiser-conversion-api-gtm-template
+  - name: teads-cookieless-tag-gtm-template
+    kind: cookieless GTM tag template
+    repository: https://github.com/teads/teads-cookieless-tag-gtm-template
+web_components:
+  published: false
+  note: >-
+    Teads ships no custom-element / web-component library and no npm-hosted
+    browser element library. Browser-side delivery is the Teads Pixel tag and the
+    BrandDisplay HTML embed returned by the API.
+cross_links:
+  packages: packages/teads-packages.yml
+  data_model: data-model/teads-data-model.yml

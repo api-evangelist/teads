@@ -1,56 +1,204 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
 source: https://github.com/teads
 description: >-
-  First-party Teads client SDKs for building premium outstream ad inventory in
-  mobile and cross-platform apps. Distributed via CocoaPods, Swift Package Manager,
-  the Teads Artifactory Maven repository, and npm. Discovered on the verified
-  github.com/teads organization and package registries.
+  First-party Teads client SDKs for building premium outstream, native, banner,
+  interstitial, feed and recommendation ad inventory in mobile and cross-platform
+  apps, plus mediation adapters and tag-manager templates. Versions and publish
+  dates below were read from the registry metadata endpoints (CocoaPods trunk,
+  registry.npmjs.org, pub.dev) and, where a registry does not answer, from the
+  GitHub Releases API on the verified github.com/teads organization.
+currency_checked: '2026-08-13'
 packages:
 - name: TeadsSDK
   ecosystem: cocoapods
+  registry: cocoapods
   official: true
   language: Swift/Objective-C
-  registry: https://cocoapods.org/pods/TeadsSDK
+  registry_url: https://cocoapods.org/pods/TeadsSDK
+  metadata_url: https://trunk.cocoapods.org/api/v1/pods/TeadsSDK
   repository: https://github.com/teads/TeadsSDK-iOS
   install: "pod 'TeadsSDK'"
-  notes: iOS outstream ad SDK; also available via Swift Package Manager.
-- name: TeadsSDK-iOS (SPM)
+  version: 6.2.0
+  published: '2026-06-23'
+  release_count: 124
+  notes: iOS ad SDK; the same release stream is published via Swift Package Manager.
+- name: TeadsSDK-iOS (Swift Package Manager)
   ecosystem: swift
+  registry: git
   official: true
   language: Swift
-  registry: https://swiftpackageregistry.com/teads/TeadsSDK-iOS
   repository: https://github.com/teads/TeadsSDK-iOS
   install: "https://github.com/teads/TeadsSDK-iOS"
+  version: 6.2.0
+  published: '2026-06-23'
+  notes: >-
+    SPM has no central metadata endpoint; version and date read from the GitHub
+    Releases API for the same repository (tag 6.2.0).
 - name: tv.teads.sdk:sdk
   ecosystem: maven
+  registry: jfrog-artifactory
   official: true
   language: Kotlin/Java
-  registry: https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod
+  registry_url: https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod
   repository: https://github.com/teads/TeadsSDK-android
-  install: "implementation('tv.teads.sdk:sdk:X.Y.Z')"
-  notes: Hosted in the Teads JFrog Artifactory Maven repo, not Maven Central.
-- name: TeadsSDK-ReactNative
+  install: "implementation('tv.teads.sdk:sdk:6.2.1')"
+  version: 6.2.1
+  published: '2026-08-05'
+  notes: >-
+    Hosted in the Teads JFrog Artifactory Maven repo, not Maven Central. The
+    repo's maven-metadata.xml is not publicly readable (404 on
+    SDKAndroid-maven-prod/tv/teads/sdk/sdk/maven-metadata.xml), so version and
+    date were read from the GitHub Releases API (tag v6.2.1). Consumers cannot
+    resolve the latest version from registry metadata either.
+- name: teads-react-native
   ecosystem: npm
+  registry: npm
   official: true
   language: TypeScript
+  registry_url: https://www.npmjs.com/package/teads-react-native
+  metadata_url: https://registry.npmjs.org/teads-react-native
   repository: https://github.com/teads/TeadsSDK-ReactNative
-  notes: React Native >= 0.78.0, New Architecture/Fabric required.
-- name: TeadsSDK-flutter
+  install: npm install teads-react-native
+  version: 6.2.0
+  published: '2026-06-22'
+  maintainers:
+  - oregev-outbrain
+  - l.lemesev
+  notes: >-
+    "Easily embed Teads Widgets in your React Native app!" Published by Outbrain
+    /Teads maintainers and tracks the native 6.2.0 release line. Requires React
+    Native >= 0.78.0 with the New Architecture (Fabric).
+- name: teads_sdk_flutter
   ecosystem: pub
+  registry: pub.dev
   official: true
   language: Dart
+  registry_url: https://pub.dev/packages/teads_sdk_flutter
+  metadata_url: https://pub.dev/api/packages/teads_sdk_flutter
   repository: https://github.com/teads/TeadsSDK-flutter
-adapters:
-- name: TeadsSDK-adapter-admob-ios
+  install: "flutter pub add teads_sdk_flutter"
+  version: 1.0.5
+  published: '2022-12-16'
+  release_count: 6
+  notes: >-
+    DECAY SIGNAL — the Flutter SDK has not shipped since 2022-12-16 while the
+    native iOS/Android SDKs moved through a 6.0.0 unified-placement rewrite
+    (2025-10-29) and on to 6.2.1 (2026-08-05). The repository was last pushed
+    2024-03-26. A Flutter integrator is three major versions behind the platform
+    the plugin wraps.
+- name: teads_admob_adapter
+  ecosystem: pub
+  registry: pub.dev
   official: true
+  language: Dart
+  registry_url: https://pub.dev/packages/teads_admob_adapter
+  repository: https://github.com/teads/TeadsSDK-flutter
+  version: 1.0.0
+  published: '2022-12-16'
+  notes: Flutter AdMob mediation adapter; same 2022 freeze as the Flutter SDK.
+- name: react-native-teads-sdk-module
+  ecosystem: npm
+  registry: npm
+  official: false
+  language: JavaScript
+  registry_url: https://www.npmjs.com/package/react-native-teads-sdk-module
+  repository: https://github.com/teads/TeadsSDK-ReactNative
+  version: 0.0.2
+  published: '2023-06-21'
+  notes: >-
+    Points at the Teads React Native repository and was published by the
+    "appdevteads" npm account, but its description is literally "test" and it is
+    superseded by teads-react-native. Recorded as legacy/unofficial — do not
+    treat as the supported React Native distribution.
+adapters:
+- name: TeadsAdMobAdapter
+  ecosystem: cocoapods
+  registry: cocoapods
+  official: true
+  registry_url: https://cocoapods.org/pods/TeadsAdMobAdapter
   repository: https://github.com/teads/TeadsSDK-adapter-admob-ios
-  notes: Google AdMob mediation adapter (iOS).
+  version: 6.2.0
+  published: '2026-06-23'
+  release_count: 51
+  notes: Google AdMob mediation adapter for iOS; released in lockstep with TeadsSDK.
+- name: TeadsSDK-iOS-Prebid
+  ecosystem: git
+  registry: git
+  official: true
+  repository: https://github.com/teads/TeadsSDK-iOS-Prebid
+  version: null
+  published: null
+  notes: >-
+    Prebid integration sample/plugin distributed from GitHub only; no registry
+    release and no tagged version, so no published version exists to record.
+    Repository last pushed 2026-05-28.
+- name: TeadsSDK-adapter-mopub-ios
+  ecosystem: git
+  registry: git
+  official: true
+  repository: https://github.com/teads/TeadsSDK-adapter-mopub-ios
+  version: null
+  published: null
+  notes: MoPub adapter; MoPub is discontinued and the repo has been idle since 2022-03-18.
+- name: TeadsSDK-adapter-sas-ios
+  ecosystem: git
+  registry: git
+  official: true
+  repository: https://github.com/teads/TeadsSDK-adapter-sas-ios
+  version: null
+  published: null
+  notes: Smart AdServer (Equativ) adapter; repo idle since 2021-08-10.
 tag_manager_templates:
 - name: teads-gtm-template
   official: true
+  registry: none
   repository: https://github.com/teads/teads-gtm-template
+  version: null
+  published: null
+  notes: >-
+    Google Tag Manager template distributed from GitHub / the GTM Community
+    Template Gallery; no package registry and no release tags, so there is no
+    version metadata to read. Repo last pushed 2026-03-10.
 - name: teads-advertiser-conversion-api-gtm-template
   official: true
+  registry: none
   repository: https://github.com/teads/teads-advertiser-conversion-api-gtm-template
-  notes: Server-side GTM template for the Teads Conversions API.
+  version: null
+  published: null
+  notes: >-
+    Server-side GTM template for the Teads Conversions API. No registry, no
+    release tags. Repo last pushed 2026-07-22 — the most recently touched
+    Conversions API artifact Teads publishes.
+- name: teads-cookieless-tag-gtm-template
+  official: true
+  registry: none
+  repository: https://github.com/teads/teads-cookieless-tag-gtm-template
+  version: null
+  published: null
+  notes: Cookieless tag template; repo idle since 2022-06-07.
+retired:
+- name: TeadsSDK-unity
+  repository: https://github.com/teads/TeadsSDK-unity
+  version: null
+  published: null
+  notes: Unity SDK; repository idle since 2018-06-15, not referenced by current docs.
+absent_registries:
+  npm_scoped: >-
+    No @teads/* scope is published on npm; @teads/sdk and
+    @teads/react-native-teads-sdk-module both return "Not found".
+  maven_central: >-
+    tv.teads.sdk is not published to Maven Central; Android consumers must add
+    the Teads JFrog Artifactory repository.
+  pypi: No Python client library is published.
+  nuget: No .NET client library is published.
+  rubygems: No Ruby client library is published.
+  crates_io: No Rust client library is published.
+  go: No Go module is published.
+rest_api_clients:
+  published: false
+  note: >-
+    Every first-party package Teads ships is a mobile/ad-rendering SDK. Neither
+    the In-Chat Recommendations API nor the Conversions API has a first-party
+    client library in any server-side language — integrators hand-roll HTTP or
+    use the server-side GTM template.

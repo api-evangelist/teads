@@ -1,26 +1,107 @@
-generated: '2026-07-21'
-method: derived
-status: candidate
-source: derived from developers.teads.com documented REST operations
+generated: '2026-08-13'
+method: searched
+status: announced-not-shipped
+source: https://developers.teads.com/docs/Chatbot-AI-SDK/Examples/sdk-mcp-coming-soon/
 description: >-
-  No official hosted or remote Teads MCP server was found (searched the MCP
-  registry, github.com/teads, and the developer portal as of 2026-07-21). The
-  following is a CANDIDATE tool surface derived from Teads' two documented public
-  REST APIs, provided as a design sketch only. Not published by Teads.
+  Teads has PUBLICLY ANNOUNCED an MCP integration but has not shipped it. Its
+  developer portal carries a page titled "Teads AI Chatbot SDK — MCP Integration
+  (Coming Soon)" with "Planned Release: 2026" and "Status: In Development",
+  describing an MCP server that would front the Teads Measurement, Publisher
+  (Organic) and Marketer (Paid) APIs behind one endpoint so that keys stay
+  server-side. There is no endpoint, no manifest, no package and no registry
+  listing today. Access to the MCP Developer Beta is requested from a Teads
+  Partner Manager or ai-sdk@teads.com.
+  The tools[] block below is a CANDIDATE surface derived from Teads' two
+  documented REST APIs plus the one action name Teads itself illustrates
+  ("getOrganic"). It is a design sketch, NOT something Teads publishes, and no
+  MCPServer pointer is emitted in apis.yml for this provider.
 server:
   official: false
   hosted: false
+  published: false
+announcement:
+  url: https://developers.teads.com/docs/Chatbot-AI-SDK/Examples/sdk-mcp-coming-soon/
+  http_status: 200
+  planned_release: '2026'
+  vendor_status: In Development
+  beta_contact: ai-sdk@teads.com
+  architecture_claimed: >-
+    GPT / AI agent -> MCP Server (Teads Connector) -> Teads Measurement API,
+    Teads Publisher (Organic) API, Teads Marketer (Paid) API.
+  vendor_example_call: |
+    {"action": "getOrganic", "parameters": {"contentUrl": "https://example.com/page"}}
+  vendor_claims:
+  - Unified context layer across multiple GPTs and agents through one endpoint
+  - Sensitive keys remain server-side, managed by a proxy layer
+  - Zero-config GPT integration via a single manifest file
+  - Multi-agent access to shared measurement and content signals
+probes:
+- url: https://developers.teads.com/docs/Chatbot-AI-SDK/Examples/sdk-mcp-coming-soon/
+  status: 200
+  finding: announcement page only
+- url: https://mv.outbrain.com/.well-known/oauth-protected-resource
+  status: 404
+- url: https://mv.outbrain.com/.well-known/oauth-authorization-server
+  status: 404
+- url: https://ca.teads.tv/.well-known/oauth-authorization-server
+  status: 404
+- registry: npm
+  query: "@teads/* scope"
+  status: not-found
+  finding: No @teads npm scope exists; no MCP package published.
+- registry: github.com/teads
+  status: 200
+  finding: >-
+    53 public repositories enumerated; no Teads MCP server. The org does contain
+    an `okta-mcp-server` repo, which is an INTERNAL IT tool for Okta, not a Teads
+    product API server — do not mistake it for a Teads MCP surface.
+tools_note: >-
+  CANDIDATE ONLY — derived from documented REST operations. Not published by
+  Teads and not callable.
 tools:
 - name: get_in_chat_recommendations
   derived_from: POST https://mv.outbrain.com/Multivac/api/in-chat-recs
   description: >-
-    Retrieve contextual sponsored/organic ad recommendations for a chatbot or LLM
-    surface given chat context, keywords, and IAB categories.
+    Retrieve contextual sponsored and organic ad recommendations for a chatbot or
+    LLM surface given chat context, keywords and IAB categories.
   auth: Partner API Key (key)
+  inputs_documented:
+  - key
+  - widgetJSId
+  - contentUrl / bundleUrl / portalUrl
+  - lang
+  - response_version
+  - response_types
+  - keywords
+  - iabCategories
+  - chat
+  - bf
+  - api_consent
+  - cnsntv2
+- name: report_ad_served
+  derived_from: GET results.{type}.tracking.reportServed (+ &pos=X-Y)
+  description: Confirm a recommendation set was served so the fill is counted.
+  auth: none (signed URL returned in the response)
 - name: send_conversion_event
   derived_from: Teads Conversions API (https://ca.teads.tv, v1)
   description: >-
     Send a server-side advertiser conversion event (Purchase, AddToCart, Lead,
-    ViewContent, InitiateCheckout, etc.) with pixel id, event time, value and
-    currency.
+    ViewContent, InitiateCheckout) with pixel id, event time, value and currency.
   auth: Conversion API Token
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  tools: 3
+  checked: '2026-08-13'
+  source: >-
+    Teads' own MCP page states the integration is in development with a planned
+    2026 release; no endpoint or package exists to reach today.
+recommendation: >-
+  This is the single highest-leverage agent-readiness move available to Teads.
+  They already ship a conversational-AI ad product whose customers are LLM
+  publishers, and they have designed the MCP layer publicly. Shipping the
+  announced endpoint would turn an announcement into a callable agent surface.

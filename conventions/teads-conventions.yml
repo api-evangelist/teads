@@ -1,53 +1,213 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
-source: https://developers.teads.com/
+source: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
 description: >-
-  Cross-cutting API conventions for the Teads developer surfaces, derived from the
-  developer portal and partner integration guides. Teads publishes no OpenAPI
-  document, so semantics below reflect documented behavior only.
+  Cross-cutting runtime semantics for the Teads developer surfaces, transcribed
+  from the published In-Chat Recommendations API V2.0 technical integration
+  guide, its settings, examples and privacy pages, and the mobile SDK docs. Teads
+  publishes no OpenAPI document, so everything below reflects documented behavior
+  only. Where a convention is genuinely absent (idempotency, error envelope,
+  pagination, rate limiting) that absence is recorded rather than invented.
 auth:
   style: api-key
   detail: >-
-    Conversions API uses a Conversion API Token; In-Chat API uses a Partner API
-    Key passed as the `key` query parameter. See authentication/teads-authentication.yml.
+    In-Chat Recommendations API uses a Partner API Key in the `key` QUERY
+    parameter — a credential in the URL, which is logged by intermediaries. The
+    Conversions API uses a Conversion API Token generated in Teads Ad Manager.
+    Neither surface documents OAuth 2.0, OIDC, mTLS or key rotation.
+  see: authentication/teads-authentication.yml
 transport:
   format: json
   in_chat_api:
     method: POST
     endpoint: https://mv.outbrain.com/Multivac/api/in-chat-recs
+    content_type: application/json
+    parameter_split:
+      query:
+      - key
+      - widgetJSId
+      - response_version
+      - response_types
+      - contentUrl
+      - bundleUrl
+      - portalUrl
+      - lang
+      - bf
+      - cors
+      - testMode
+      - api_consent
+      - cnsntv2
+      body:
+      - keywords
+      - iabCategories
+      - chat
+      note: >-
+        A POST whose identifying and control parameters all live in the query
+        string and whose body carries only contextual signals. Integrators must
+        respect the split — Teads documents it explicitly.
     required_headers:
-    - User-Agent
-    - X-Forwarded-For
+    - name: User-Agent
+      value: the END USER's agent string, not the calling server's
+    - name: X-Forwarded-For
+      value: the end user's public (or masked) IP address
+    - name: Content-Type
+      value: application/json
+    header_note: >-
+      This is a server-side API that must impersonate the end user's client
+      context for geo-compliance, fraud prevention and device-appropriate
+      creative selection.
   conversions_api:
     base: https://ca.teads.tv
     version: v1
+    health: https://ca.teads.tv/health
+addressing_context:
+  rule: exactly one context URL parameter applies per environment
+  variants:
+  - param: contentUrl
+    when: web surfaces with a publicly crawlable host page
+  - param: bundleUrl
+    when: native apps; URI-encoded app store URL; requires lang
+  - param: portalUrl
+    when: messaging apps / internal tools with no crawlable URL; requires lang
+  lang: ISO-639-1-alpha-2, mandatory with bundleUrl or portalUrl, omitted otherwise
 identity_and_tracing:
+  request_id: not documented
   first_party_cookies:
-  - tfpai   # carries auctid (event/click id)
-  - tfpvi   # user identifier
-  - tfpsi   # user session id
+  - name: tfpai
+    carries: auctid (event/click id)
+  - name: tfpvi
+    carries: user identifier
+  - name: tfpsi
+    carries: user session id
   event_id_field: auctid
+  placement_ids:
+  - widgetJSId (In-Chat, e.g. APP_12 / APP_16)
+  - placement_id (Teads-internal, returned in the display object)
+  - pid (mobile SDK placement id, e.g. 84242)
 versioning:
-  in_chat_api: "explicit version field in request/response payload (e.g. 2.0)"
-  conversions_api: "path/label version v1"
-  sdks: semver per platform (iOS/Android/React Native/Flutter)
+  in_chat_api: >-
+    Client-declared via the response_version query parameter (must be "2.0"); the
+    response echoes it in the root `version` field. No path or header versioning.
+  conversions_api: labeled v1
+  sdks: semver per platform (iOS / Android / React Native / Flutter)
+  see: lifecycle/teads-lifecycle.yml
+response_shaping:
+  mechanism: response_types
+  values:
+  - catOrKeywords
+  - embeddings
+  - BrandDisplay
+  detail: >-
+    The caller selects which recommendation engines populate the response;
+    results are keyed by engine type. BrandDisplay additionally returns a
+    `display` object carrying a renderable HTML snippet.
+  result_count: >-
+    Fixed by the widgetJSId, not by a limit parameter — each widget id has a
+    fixed number of recommendations and image size.
 pagination:
   documented: false
-  note: No paginated collection endpoints are documented on the public surface.
+  note: >-
+    No paginated collection endpoints exist. Response size is fixed per widget
+    id; there is no cursor, offset, limit or page parameter on any Teads surface.
+filtering_and_targeting:
+  keywords: array of high-intent session terms
+  iabCategories: IAB V1 content categories
+  chat: free-text conversational context
+  bid_floor: bf (CPM-based) on the API; floorPrice / pbf on SDK placements
 idempotency:
   documented: false
+  supported: false
   note: >-
-    No idempotency key or replay-safe semantics are documented; conversion events
-    carry a client-supplied event id (auctid) that can act as a de-duplication key
-    but Teads does not document guaranteed idempotent processing.
+    No Idempotency-Key header, no replay-safe semantics, no de-duplication
+    contract on any Teads surface. The Conversions API carries a client-supplied
+    event id (auctid) that COULD act as a de-duplication key, but Teads does not
+    document guaranteed idempotent processing, so a retried conversion event has
+    no stated safety guarantee. No Idempotency pointer is emitted in apis.yml for
+    this provider — the artifact records the gap, it does not claim the feature.
 rate_limits:
   documented: false
+  see: rate-limits/teads-rate-limits.yml
 error_envelope:
   documented: false
+  format: none
+  rfc9457: false
   note: >-
-    In-Chat API returns JSON keyed by recommendation engine type; no RFC 9457
-    problem+json error envelope is documented.
+    The In-Chat API returns JSON keyed by recommendation engine type. No error
+    object, no status-code table, no application/problem+json envelope and no
+    error code registry are published for either REST surface. An integrator has
+    no documented way to distinguish "no fill" from "bad key" from "malformed
+    request".
+  sdk_errors:
+    surface: TeadsAdPlacementEventName.ERROR event with a data map
+    catalog: see errors/teads-validation-errors.yml (integration-validation errors, not HTTP errors)
+consent_and_privacy:
+  required: true
+  parameters:
+  - name: api_consent
+    type: integer
+    requirement: recommended
+    detail: Set to 1 to signal the host app obtained user consent for API interaction.
+  - name: cnsntv2
+    type: string
+    requirement: required in the EU
+    detail: IAB TCF v2.0 consent string.
+  sdk_signals:
+  - GDPR (TCF v2.x consent string)
+  - CCPA / US Privacy
+  - GPP — as of Android SDK 6.2.0 read from IABGPP_GppSID, not IABGPP_HDR_Sections
+  pii_rule: >-
+    Integrators must ensure no PII (emails, names, phone numbers) leaks into the
+    `chat` or `keywords` parameters.
+  see: conformance/teads-conformance.yml
+tracking_lifecycle:
+  mandatory: true
+  note: >-
+    Unusually for a read API, the caller carries a documented POST-RESPONSE
+    obligation. Failing to fire these pixels does not error — it silently
+    zeroes revenue, which makes this the most consequential convention on the
+    surface.
+  steps:
+  - signal: Serve
+    json_path: results.{type}.tracking.reportServed
+    trigger: as soon as the response is received and the widget is initialized
+    method: GET
+    mutation: append &pos=X-Y using the displayed ad's pos value
+    priority: high
+  - signal: Impression
+    json_path: results.{type}.documents[n].doc_tracking.pixels
+    trigger: when the ad asset is injected into the chat UI
+    method: GET (fire every URL in the array)
+    macros:
+      ${AUCTION_MIN_TO_WIN}: default to 0 (or the clearing price) if not running a client-side auction
+    priority: high
+  - signal: Viewability
+    json_path: results.{type}.documents[n].doc_tracking.on-viewed
+    trigger: ONLY when the ad enters the user's visible viewport
+    method: GET
+    priority: critical
+    revenue_impact: >-
+      vCPM-billed campaigns pay nothing without this signal, even when the ad was
+      served.
+environments:
+  separate_sandbox_host: false
+  test_flag: testMode=true
+  see: sandbox/teads-sandbox.yml
+configuration_guidance:
+  env_vars:
+  - TEADS_INCHAT_RECS_ENDPOINT
+  - TEADS_API_KEY
+  - TEADS_WIDGET_JS_ID
+  - TEADS_CORS
+  - TEADS_TEST_MODE
+  rules:
+  - Store configuration in environment variables or secure secrets management.
+  - Never hardcode API keys in client-side repos or public codebases.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
 cross_links:
   authentication: authentication/teads-authentication.yml
   lifecycle: lifecycle/teads-lifecycle.yml
   changelog: changelog/teads-changelog.yml
+  data_model: data-model/teads-data-model.yml
+  sandbox: sandbox/teads-sandbox.yml
+  rate_limits: rate-limits/teads-rate-limits.yml
+  conformance: conformance/teads-conformance.yml

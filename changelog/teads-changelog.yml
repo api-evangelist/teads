@@ -1,39 +1,146 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
-source: https://github.com/teads/TeadsSDK-iOS/releases
+source: https://developers.teads.com/docs/Android-SDK/Getting-Started/release-notes/
 description: >-
-  Change history for the Teads developer surfaces. Teads does not publish a
-  unified API changelog; version history is tracked per-SDK via GitHub Releases.
-  This captures the iOS SDK release stream plus a recent Android SDK change as a
-  representative sample.
-scheme: semver-per-sdk
+  Teads publishes no unified API changelog. Version history is per product line:
+  dated release-notes pages on the developer portal for each mobile SDK and for
+  the Conversational AI Ads SDK, mirrored by GitHub Releases on the
+  github.com/teads organization. Neither REST API (In-Chat Recommendations,
+  Conversions) has a dated changelog of its own; the In-Chat API communicates
+  version through a response_version request parameter instead.
+scheme: semver-per-product
 sources:
-- ios: https://github.com/teads/TeadsSDK-iOS/releases
-- android: https://github.com/teads/TeadsSDK-android/releases
+  android_release_notes: https://developers.teads.com/docs/Android-SDK/Getting-Started/release-notes/
+  ios_release_notes: https://developers.teads.com/docs/iOS-SDK/Getting-Started/release-notes/
+  react_native_release_notes: https://developers.teads.com/docs/React-Native-SDK/Getting-Started/release-notes/
+  conversational_ai_release_notes: https://developers.teads.com/docs/Chatbot-AI-SDK/News/release-notes/
+  github_ios: https://github.com/teads/TeadsSDK-iOS/releases
+  github_android: https://github.com/teads/TeadsSDK-android/releases
 current_versions:
+  android: 6.2.1
   ios: 6.2.0
+  react_native: 6.2.0
+  flutter: 1.0.5
+  in_chat_api: '2.0'
+  conversational_ai_sdk: beta
 entries:
+- component: TeadsSDK-android
+  version: 6.2.1
+  date: '2026-08-05'
+  breaking: false
+  additions: []
+  highlights: >-
+    Removed unused Picasso and androidx.ads:ads-identifier dependencies, reducing
+    transitive dependencies. No API or behavior change.
+- component: TeadsSDK-android
+  version: 6.2.0
+  date: '2026-06-23'
+  breaking: false
+  deprecations:
+  - TeadsAdPlacementRecommendationsConfig(articleUrl, widgetId) constructor
+  - Classic InRead / Native placement APIs (compiler warnings; still functional)
+  additions:
+  - Anchored Banner placement (TeadsAdPlacementBanner) for Direct and AdMob, adaptive height
+  - floorPrice on Banner, Interstitial and Feed placement configs; pbf in AdMob custom-event JSON
+  - TeadsAdPlacementRecommendationsURLConfig / TeadsAdPlacementRecommendationsPlatformConfig
+  - Publisher-supplied userId forwarded on Feed ad requests
+  highlights: >-
+    OM SDK upgraded to 1.6.5-iab382 for 2026 measurement certification. GPP
+    consent source changed — the SDK now reads section IDs from IABGPP_GppSID
+    instead of IABGPP_HDR_Sections, which requires a CMP-side change. Fixed a
+    ConcurrentModificationException crash in viewability tracking.
 - component: TeadsSDK-iOS
   version: 6.2.0
-  date: '2024-06-23'
+  date: '2026-06-23'
   breaking: false
-  highlights: Maintenance release.
+  highlights: iOS counterpart of the 6.2.0 line; released via CocoaPods and SPM.
+- component: TeadsSDK-android
+  version: 6.1.0
+  date: '2026-04-08'
+  breaking: false
+  additions:
+  - Interstitial support via the AdMob adapter
+  highlights: Google Mobile Ads SDK upgraded to 23.6.0.
 - component: TeadsSDK-iOS
   version: 6.1.0
-  date: '2024-06-03'
+  date: '2026-06-03'
   breaking: false
   highlights: Feature release.
 - component: TeadsSDK-iOS
   version: 6.0.11
-  date: '2024-04-06'
+  date: '2026-04-06'
   breaking: false
   highlights: Restored Swift Package Manager support for mediation adapters.
 - component: TeadsSDK-android
-  version: recent
-  date: '2026'
+  version: 6.0.4
+  date: '2026-02-12'
+  breaking: false
+  highlights: Stability improvements.
+- component: TeadsSDK-android
+  version: 6.0.3
+  date: '2026-01-22'
+  breaking: false
+  highlights: Fixed a Feed placement scrolling issue.
+- component: TeadsSDK-android
+  version: 6.0.2
+  date: '2025-12-15'
   breaking: false
   highlights: >-
-    Added TeadsAdPlacementRecommendationsURLConfig /
-    TeadsAdPlacementRecommendationsPlatformConfig constructors; deprecated the
-    older TeadsAdPlacementRecommendationsConfig(articleUrl, widgetId) constructor.
-    OM SDK upgraded to 1.6.5-iab382 for 2026 measurement certification.
+    Resolved DEX merge conflicts when integrated alongside other libraries using
+    generic obfuscated package names.
+- component: TeadsSDK-android
+  version: 6.0.1
+  date: '2025-12-04'
+  breaking: false
+  additions:
+  - Audio lifecycle callbacks (START_PLAY_AUDIO / STOP_PLAY_AUDIO; onAudioStart / onAudioStop)
+  - Orientation change support
+- component: Teads Conversational AI Ads SDK
+  version: initial public beta
+  date: '2025-11-12'
+  breaking: false
+  additions:
+  - Native, non-disruptive ad placements inside conversational UIs
+  - Contextual relevance via Teads contextual intelligence
+  - Placement controls for how, where and when ads render
+  - Metrics, reporting and payouts through the Teads platform
+  highlights: >-
+    First public beta. Teads states semantic versioning applies but that MAJOR
+    /MINOR/PATCH releases during beta may include breaking changes.
+- component: TeadsSDK-android
+  version: 6.0.0
+  date: '2025-10-29'
+  breaking: true
+  breaking_changes:
+  - InReadAdListener deprecated interface removed; use InReadAdViewListener or InReadAdModelListener
+  additions:
+  - Unified placement interface via Teads.createPlacement()
+  - TeadsAdPlacementFeed (content recommendation widgets)
+  - TeadsAdPlacementRecommendations (programmatic recommendations)
+  - Unified TeadsAdPlacementEventsListener across all placement types
+  - Dark mode via toggleDarkMode()
+  - Explore More
+  - Jetpack Compose support
+  highlights: >-
+    The rewrite that merged the Teads and Outbrain mobile stacks into one SDK;
+    migration guides are published for both origins.
+- component: TeadsSDK-android
+  version: 5.1.7
+  date: '2025-07-22'
+  breaking: false
+  highlights: Fixed SDK init from a background thread. Last of the legacy 5.x line.
+window: >-
+  Recent window only — the 6.x line plus the 5.1.x tail. Teads' own page carries
+  legacy notes back to 5.0.x under a "Legacy Release Notes" heading.
+gaps:
+- No changelog exists for the Teads Conversions API.
+- >-
+  No changelog exists for the In-Chat Recommendations API; the only version
+  signal is the response_version=2.0 request parameter.
+- >-
+  The React Native and Flutter distributions carry no dated release notes of
+  their own on GitHub — the RN repo's only release tag is from 2019 and the
+  Flutter tags stop at 2022-12-16.
+cross_links:
+  lifecycle: lifecycle/teads-lifecycle.yml
+  packages: packages/teads-packages.yml

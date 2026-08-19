@@ -1,0 +1,124 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.teads.com/docs/iOS-SDK/Troubleshooting/validation-tool/
+description: >-
+  SCOPE WARNING — read this before using this file. Teads publishes NO error
+  catalogue for its REST APIs: neither the In-Chat Recommendations API nor the
+  Conversions API documents a status-code table, an error envelope, or an error
+  code registry. What Teads DOES publish is the numbered error list its hosted
+  SDK Validation Tool returns when it grades a live mobile integration. That list
+  is transcribed below because it is real, provider-published and remediation-
+  bearing, but it describes an integration-grading service, not API responses.
+  For that reason NO ErrorCatalog pointer is emitted for this provider in
+  apis.yml — an agent calling a Teads REST endpoint still has no documented error
+  semantics.
+applies_to: Teads SDK Validation Tool (Media/video placements only)
+does_not_apply_to:
+- Teads In-Chat Recommendations API (https://mv.outbrain.com/Multivac/api/in-chat-recs)
+- Teads Conversions API (https://ca.teads.tv)
+- Media Native, Feed and Recommendations SDK placements (unsupported by the tool)
+envelope:
+  format: human-readable message in the validation session UI
+  machine_readable: false
+  codes_are_stable: unknown
+categories:
+- id: '1'
+  name: App Store Issues
+  errors:
+  - code: '1.1'
+    message: >-
+      We were unable to find your app on the App Store. If you think there is an
+      issue, contact your dedicated Partner Manager with your Session Info.
+    causes:
+    - App not yet released on the store
+    - App is using a test bundle name
+    - Bundle name not set correctly on the Teads side
+    remediation: Publish the app or correct the reverse-domain bundle identifier with your Partner Manager.
+  - code: '1.2'
+    message: >-
+      We are not able to find your Developer Website from Apple. Did you fill the
+      Marketing URL / Developer URL on App Store?
+    remediation: >-
+      Set the store marketing/developer website URL to the same site that hosts
+      your app-ads.txt.
+  - code: '1.3'
+    message: We found your developer URL but were not able to find a proper URL to crawl.
+    remediation: Make the website publicly reachable and not behind a firewall.
+- id: '2'
+  name: App-ads.txt Issues
+  errors:
+  - code: '2.1'
+    message: >-
+      We are not able to find your app-ads.txt file. It may not exist, or the
+      server may not be configured correctly.
+    causes:
+    - File missing
+    - app-ads.txt hidden behind a server redirect
+    remediation: Publish app-ads.txt publicly at the store-declared website root per the IAB App Ads.txt spec.
+    known_issue: >-
+      On iOS this step may fail because of an iTunes API problem; the failure
+      does not reflect the actual app-ads.txt implementation.
+  - code: '2.2'
+    message: >-
+      We found your app-ads.txt but it did not include Teads. Contact your Teads
+      Publisher Manager for more info. Also, "teads.com" is not a valid domain.
+    remediation: >-
+      Add the exact Teads line supplied by your Publisher Manager — the seller
+      domain is teads.tv, not teads.com.
+- id: '3'
+  name: Consent Issues
+  errors:
+  - code: '3.1'
+    message: >-
+      The consent string is empty / seems to be wrong / is not formatted
+      correctly / cannot be parsed.
+    remediation: Set the consent signal on AdPlacementSettings; see the Privacy & Compliance page.
+  - code: '3.2'
+    message: >-
+      The consent string is missing some data, there is probably something wrong
+      with the CMP you are using / We did not get any response from your CMP.
+    remediation: Ensure the CMP writes a consent string that respects the IAB CMP internal structure.
+- id: '4'
+  name: Brand Safety Issues
+  errors:
+  - code: '4.1'
+    message: >-
+      You need to pass the page URL to Teads SDK. This may be the sharing URL
+      from a given content (article, sport result). This URL should be available
+      from any country.
+    remediation: Set .pageUrl(...) on AdRequestSettings with the content-specific, globally reachable URL.
+- id: '5'
+  name: Tracking Issues
+  errors:
+  - code: '5.1'
+    message: Tracking has not been received.
+    remediation: Disable any proxy or VPN on the test device/simulator.
+- id: '6'
+  name: Visibility Issues
+  errors:
+  - code: '6.1'
+    message: >-
+      Make sure the ad is visible on the screen. If you can see the ad, but it
+      does not start, check your console logs — it could be due to an overlay.
+    remediation: >-
+      Remove overlaying content and ensure the placement is large enough;
+      undersized ads are treated as not displayed.
+  - code: '6.2'
+    message: You need to wait for the end of the video, so we can check that the ad played entirely.
+    remediation: Let the video creative complete before reading the result.
+validation_checks_passed:
+- Page/article URL is valid (brand safety)
+- GDPR / CCPA / GPP consent signals provided
+- SDK version is up to date
+- app-ads.txt includes teads.tv
+- Teads tracking is correctly sent and received
+- Media playback completes successfully
+- Creative resizes correctly
+gaps:
+- No HTTP status code semantics published for either REST API.
+- No RFC 9457 problem+json envelope anywhere on the surface.
+- No stable machine-readable error codes; the "codes" above are document section numbers.
+- No documented distinction between "no fill", "invalid key" and "malformed request".
+cross_links:
+  conventions: conventions/teads-conventions.yml
+  sandbox: sandbox/teads-sandbox.yml

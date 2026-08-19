@@ -1,0 +1,64 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.teads.com/
+description: >-
+  Teads publishes no self-serve plans, price list, or public rate card for any of
+  its developer surfaces. The In-Chat Recommendations API, the Conversions API,
+  and the mobile ad SDKs are all obtained through a Teads account representative
+  or Partner Manager, and are monetized on the ad-revenue side (CPM / vCPM /
+  CPC revenue share) rather than sold as metered API access. This is a recorded
+  commercial posture, not a missing lookup.
+plan_count: 0
+plans: []
+model:
+  type: sales-led-revenue-share
+  billing_basis:
+  - CPM
+  - vCPM (viewable CPM)
+  - CPC / net_cpc
+  detail: >-
+    Media owners and conversational-AI publishers are paid out of ad revenue
+    Teads books against their inventory; the API itself carries no list price.
+    The In-Chat API response returns cpm / net_cpc per document and Teads' own
+    docs describe "Metrics, reporting, and payouts via Teads' platform".
+  floor_controls:
+  - field: bf
+    surface: In-Chat Recommendations API
+    description: Bid floor parameter, based on CPM.
+  - field: floorPrice
+    surface: Mobile SDK Banner / Interstitial / Feed placement configs
+    description: Floor price exposed on placement configs as of SDK 6.2.0.
+  - field: pbf
+    surface: AdMob Banner and Interstitial custom-event JSON
+    description: Publisher bid floor passed through mediation.
+access:
+  onboarding: sales-gated
+  requires:
+  - Partner API Key issued by a Teads account representative
+  - Widget ID (placement) approved by Teads
+  - Conversion API Token generated in Teads Ad Manager
+  beta_programs:
+  - name: Teads Conversational AI Ads SDK
+    status: Beta (first public beta 2025-11-12)
+    contact: your Teads account team or the beta intake form
+  - name: MCP Developer Beta
+    status: announced, not released
+    contact: ai-sdk@teads.com
+evidence:
+- url: https://www.teads.com/pricing/
+  status: 404
+  note: No pricing page exists on the Teads website.
+- url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/
+  status: 200
+  note: >-
+    "Before you begin, ensure you have obtained the following from your Teads
+    account representative: API Key ... Widget ID" — access is issued, not
+    purchased.
+- url: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/Dashboard/
+  status: 200
+  note: >-
+    Reporting dashboard reports Revenue / Impressions / Clicks / CTR, confirming
+    the publisher-payout rather than API-metering model.
+- url: https://login.teads.tv/login
+  status: 200
+  note: Ad Manager login; account provisioning happens behind it.

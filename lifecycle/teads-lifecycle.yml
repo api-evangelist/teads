@@ -1,29 +1,127 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
-source: https://github.com/teads/TeadsSDK-android/releases
+source: https://developers.teads.com/docs/Android-SDK/Getting-Started/release-notes/
 description: >-
-  Lifecycle, versioning, and deprecation posture for Teads developer surfaces,
-  observed from SDK release notes and the developer portal. Teads versions its
-  SDKs with semver and communicates deprecations in-code and via release notes;
-  no formal RFC 8594 Sunset/Deprecation HTTP header policy is documented for the
-  REST APIs.
+  Lifecycle, versioning and deprecation posture for the Teads developer surfaces.
+  Teads runs a real, visible deprecation practice on its SDKs — deprecations are
+  announced in dated release notes, kept functional through at least one minor
+  cycle with compiler warnings, and accompanied by published migration guides
+  (one from the legacy Teads stack and one from the legacy Outbrain stack after
+  the two merged in SDK 6.0.0). Its REST APIs have no such policy: no Sunset or
+  Deprecation HTTP headers, no SLA, and no status page.
 versioning:
-  sdks: semver per platform
-  in_chat_api: explicit payload version (2.0)
-  conversions_api: labeled v1
+  sdks:
+    scheme: semver
+    per_platform: true
+    note: >-
+      The Conversational AI Ads SDK is in beta and Teads warns that MAJOR/MINOR
+      /PATCH releases during beta may include breaking changes.
+  in_chat_api:
+    scheme: request-declared version
+    mechanism: response_version query parameter
+    current: '2.0'
+    note: >-
+      The client asks for a response version rather than calling a versioned
+      path. There is no /v2/ URL segment and no version header.
+  conversions_api:
+    scheme: labeled
+    current: v1
 deprecation:
   policy_documented: partial
+  policy_url: https://developers.teads.com/docs/Android-SDK/Getting-Started/release-notes/
   mechanism: >-
-    SDK constructors and configs are marked deprecated in release notes ahead of
-    removal (e.g. Android TeadsAdPlacementRecommendationsConfig(articleUrl,
-    widgetId) deprecated in favor of URL/Platform config constructors).
-  examples:
+    Deprecations are announced in dated SDK release notes and surfaced to
+    developers as compiler warnings; deprecated APIs remain fully functional
+    while warned. Removal happens at a major version (6.0.0 removed the
+    InReadAdListener interface deprecated in the 5.x line).
+  http_headers:
+    sunset: false
+    deprecation: false
+    rfc8594: false
+    note: No RFC 8594 Sunset or Deprecation header is documented for either REST API.
+  migration_guides:
+  - url: https://developers.teads.com/docs/Android-SDK/Getting-Started/migration-teads
+    from: legacy Teads mobile SDK
+  - url: https://developers.teads.com/docs/Android-SDK/Getting-Started/migration-outbrain
+    from: legacy Outbrain mobile SDK
+  - url: https://developers.teads.com/docs/iOS-SDK/Getting-Started/migration-teads
+    from: legacy Teads mobile SDK (iOS)
+  - url: https://developers.teads.com/docs/iOS-SDK/Getting-Started/migration-outbrain
+    from: legacy Outbrain mobile SDK (iOS)
+  - url: https://developers.teads.com/docs/React-Native-SDK/Getting-Started/migration-outbrain
+    from: legacy Outbrain React Native SDK
+  current_deprecations:
   - component: TeadsSDK-android
     deprecated: TeadsAdPlacementRecommendationsConfig(articleUrl, widgetId)
     replacement: TeadsAdPlacementRecommendationsURLConfig / TeadsAdPlacementRecommendationsPlatformConfig
+    announced: '2026-06-23'
+    still_functional: true
+  - component: TeadsSDK-android
+    deprecated: Classic InRead / Native placement APIs
+    replacement: Teads.createPlacement() unified placement interface
+    announced: '2026-06-23'
+    still_functional: true
+    note: Emit compiler warnings; removal expected at the next major.
+  removed:
+  - component: TeadsSDK-android
+    removed: InReadAdListener
+    replacement: InReadAdViewListener / InReadAdModelListener
+    removed_in: 6.0.0
+    date: '2025-10-29'
+end_of_life:
+  unity_sdk:
+    status: abandoned
+    evidence: github.com/teads/TeadsSDK-unity idle since 2018-06-15; not referenced by current docs.
+  mopub_adapter:
+    status: obsolete
+    evidence: MoPub was discontinued by its owner; adapter repo idle since 2022-03-18.
+  flutter_sdk:
+    status: stale
+    evidence: >-
+      teads_sdk_flutter 1.0.5 published 2022-12-16 against a 5.x-era native SDK;
+      the native line is now 6.2.1. Teads has not announced deprecation, but the
+      plugin cannot expose the 6.x unified placement API.
 sla:
   documented: false
+  note: No uptime commitment or support-response SLA is published for any Teads API.
 status_page:
   documented: false
+  probed:
+  - url: https://status.teads.com
+    status: 0
+    note: Does not resolve.
+  - url: https://status.teads.tv
+    status: 0
+    note: Does not resolve.
+  - url: https://teads.statuspage.io
+    status: 200
+    document: false
+    note: >-
+      FALSE POSITIVE — this 200 is Atlassian's Statuspage marketing site, not a
+      Teads status page. No Teads page is provisioned on that subdomain and
+      /api/v2/summary.json 302s away. Recorded so a later run does not re-credit
+      it.
+health_endpoints:
+- url: https://ca.teads.tv/health
+  status: 200
+  body: server is up
+  documented: false
+  note: >-
+    Undocumented but live liveness endpoint on the Conversions API host; the only
+    machine-readable availability signal Teads exposes.
 support:
   url: https://support.teads.tv/
+  developer_support:
+  - https://developers.teads.com/docs/Android-SDK/Troubleshooting/support
+  - https://developers.teads.com/docs/iOS-SDK/Troubleshooting/support
+  - https://developers.teads.com/docs/React-Native-SDK/Troubleshooting/support
+  channels:
+  - Teads Partner Manager / account team (primary)
+  - Beta intake form (Conversational AI Ads SDK)
+  - ai-sdk@teads.com (MCP developer beta)
+  - scam@teads.com (fraud and phishing)
+cross_links:
+  changelog: changelog/teads-changelog.yml
+  packages: packages/teads-packages.yml
+  conventions: conventions/teads-conventions.yml
+checked: '2026-08-13'

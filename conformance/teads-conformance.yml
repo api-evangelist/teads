@@ -1,33 +1,159 @@
-generated: '2026-07-21'
-method: derived
+generated: '2026-08-13'
+method: searched
 source: https://developers.teads.com/
 description: >-
-  Conformance assertions for Teads developer APIs against common cross-cutting
-  standards. Derived from the developer portal and adtech context; Teads publishes
-  no OpenAPI, so most machine-standard conformance is not evidenced.
+  Conformance assertions for the Teads developer surfaces. The picture is
+  lopsided in a way that is characteristic of adtech: Teads conforms strongly to
+  the INDUSTRY standards of its sector (IAB TCF v2.0, GPP, CCPA, OM SDK,
+  app-ads.txt/ads.txt, IAB content taxonomy, OpenRTB/Prebid) and to corporate
+  compliance regimes (SOX, GDPR), while conforming to almost none of the WEB API
+  standards (no OpenAPI, no OAuth/OIDC, no RFC 9457, no RFC 8594, no
+  idempotency, no api-catalog). Each entry carries the evidence it was judged on.
 standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document is published. Probed /openapi.json,
+    /openapi.yaml, /swagger.json, /v1/openapi.json, /api-docs and /redoc on
+    developers.teads.com, ca.teads.tv, mv.outbrain.com and www.teads.com — all
+    404 (or 406 at the www.teads.com edge).
 - id: oauth2
   conforms: false
-  evidence: APIs use static API-key tokens, not OAuth 2.0.
+  evidence: >-
+    Both REST surfaces use static API-key style credentials issued out of band.
+    /.well-known/oauth-authorization-server 404s on every host.
 - id: oidc
   conforms: false
-  evidence: No OpenID Connect discovery or flow documented.
+  evidence: No OpenID Connect discovery document or flow; /.well-known/openid-configuration 404s on every host.
 - id: rfc9457
   conforms: false
-  evidence: No application/problem+json error envelope documented.
-- id: rfc8594
-  conforms: false
-  evidence: No Sunset/Deprecation HTTP header policy documented for REST surfaces.
-- id: idempotency
-  conforms: false
-  evidence: No idempotency-key semantics documented.
-- id: iab-openrtb
+  evidence: No application/problem+json error envelope is documented; no error catalogue exists for either REST API.
+- id: rfc9116
   conforms: partial
   evidence: >-
-    In-Chat API targeting uses IAB content categories; Teads participates in IAB
-    Tech Lab standards (OM SDK, OpenRTB ecosystem) as an adtech platform.
+    A security.txt is served at https://mv.outbrain.com/.well-known/security.txt
+    (302 to www.outbrain.com), carrying Contact and Policy. It omits the REQUIRED
+    Expires field and is not served on teads.com, developers.teads.com or
+    ca.teads.tv.
+- id: rfc8594
+  conforms: false
+  evidence: >-
+    No Sunset or Deprecation HTTP headers on the REST surfaces. Deprecation IS
+    practiced at the SDK level via dated release notes, compiler warnings and
+    migration guides — but that is a source-level policy, not the HTTP one this
+    standard defines.
+- id: rfc8615-well-known
+  conforms: partial
+  evidence: >-
+    One well-known document served (security.txt). No api-catalog, no agent
+    card, no ai-plugin, no discovery documents.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header or replay-safe processing guarantee on any surface,
+    including the Conversions API where retried event delivery is routine.
+- id: pagination
+  conforms: false
+  evidence: No paginated collections exist; response size is fixed by the widget id.
+- id: rate-limit-headers
+  conforms: false
+  evidence: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header documented; no rate limit
+    published anywhere in the 93-page developer portal.
+- id: gdpr
+  conforms: true
+  evidence: >-
+    Privacy & Consent Integration Guide requires the cnsntv2 TCF v2.0 consent
+    string for EU users and api_consent=1; privacy policy and an advertising
+    privacy portal are published; data residency is regional with SCCs for
+    first-party analytical transfers.
+  references:
+  - https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/privacy-guide/
+  - https://privacy-policy.teads.com/
+- id: iab-tcf-v2
+  conforms: true
+  evidence: >-
+    cnsntv2 parameter carries the IAB TCF v2.0 consent string on the In-Chat API;
+    the mobile SDKs read TCF consent from the CMP and the Validation Tool grades
+    it.
+- id: iab-gpp
+  conforms: true
+  evidence: >-
+    GPP consent supported by the mobile SDKs; as of Android SDK 6.2.0 the SDK
+    reads section IDs from IABGPP_GppSID (changed from IABGPP_HDR_Sections).
+- id: ccpa-usprivacy
+  conforms: true
+  evidence: CCPA compliance is one of the consent checks the Teads Validation Tool verifies.
 - id: iab-om-sdk
   conforms: true
   evidence: >-
-    Mobile SDKs integrate the IAB OM SDK (e.g. Android upgraded to 1.6.5-iab382
-    for 2026 viewability/measurement certification).
+    Mobile SDKs integrate the IAB Open Measurement SDK; Android upgraded to
+    1.6.5-iab382 for 2026 viewability/measurement certification. The In-Chat API
+    display object exposes an `om` flag signalling OM support per creative.
+- id: iab-app-ads-txt
+  conforms: true
+  evidence: >-
+    Dedicated ads_txt / app-ads.txt documentation per platform, and the
+    Validation Tool fails an integration whose app-ads.txt does not list
+    teads.tv.
+- id: iab-content-taxonomy-v1
+  conforms: true
+  evidence: >-
+    The In-Chat API iabCategories parameter takes IAB V1 categories (e.g. IAB1,
+    IAB2-1, IAB13) for contextual targeting.
+- id: prebid
+  conforms: true
+  evidence: >-
+    Published Prebid custom plugin and custom Prebid integration docs for both
+    iOS and Android; Teads maintains a prebid-server fork and a prebid.github.io
+    fork on its GitHub organization.
+- id: openrtb
+  conforms: partial
+  evidence: >-
+    Teads operates as an SSP/DSP in the OpenRTB ecosystem and exposes bid-floor
+    parameters (bf, floorPrice, pbf), but publishes no OpenRTB endpoint or
+    conformance statement on its developer portal.
+- id: sox
+  conforms: true
+  evidence: >-
+    "As a public company Teads is SOX compliant and also holds several security
+    accreditations." — https://www.teads.com/security/
+- id: soc2
+  conforms: unknown
+  evidence: >-
+    Not named. The security page references unnamed "security accreditations"
+    available through a business representative; no SOC 2 report is published or
+    requestable self-service.
+- id: iso27001
+  conforms: unknown
+  evidence: >-
+    Not named. A formal ISMS is claimed ("formally implemented and maintained
+    Information Security Management System throughout the Enterprise") but no
+    ISO 27001 certificate is published.
+- id: pci-dss
+  conforms: not-applicable
+  evidence: Teads processes no cardholder data on its developer surfaces.
+- id: mcp
+  conforms: false
+  evidence: >-
+    Announced, not shipped. Teads publishes an "MCP Integration (Coming Soon)"
+    page (planned 2026, status "In Development") describing a future MCP
+    connector fronting the Measurement, Publisher (Organic) and Marketer (Paid)
+    APIs. No server, endpoint or manifest exists today.
+  reference: https://developers.teads.com/docs/Chatbot-AI-SDK/Examples/sdk-mcp-coming-soon/
+- id: a2a
+  conforms: false
+  evidence: >-
+    No agent card served. /.well-known/agent-card.json and /.well-known/agent.json
+    probed on developers.teads.com, ca.teads.tv, mv.outbrain.com (404) and
+    www.teads.com / www.outbrain.com (406).
+security_program:
+  see: security/teads-trust-center.yml
+  highlights:
+  - Formal ISMS and risk management program
+  - Annual third-party penetration testing
+  - HackerOne bug bounty with published safe harbour
+  - Encryption at rest and in transit, minimum TLS 1.2
+  - Semiannual access review, least privilege, SSO, MFA-gated data lake
+  - 24/7 internal SOC
+checked: '2026-08-13'

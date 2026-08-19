@@ -1,0 +1,237 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+description: >-
+  Entity graph for the Teads In-Chat Recommendations API (V2.0), transcribed from
+  the published response schema in the Teads technical integration guide. Teads
+  publishes no OpenAPI document, so this is read from the provider's own object
+  reference tables rather than derived from a spec. Field names, types and
+  descriptions are Teads' own.
+spec_backed: false
+surface: Teads In-Chat Recommendations API V2.0
+endpoint: https://mv.outbrain.com/Multivac/api/in-chat-recs
+entities:
+- name: RecommendationResponse
+  role: root
+  fields:
+  - name: version
+    type: string
+    description: The API version returned, e.g. "2.0".
+  - name: results
+    type: object
+    description: Content payloads grouped by recommendation engine type.
+- name: ResultGroup
+  role: container
+  keyed_by: response_types value (catOrKeywords | embeddings | BrandDisplay)
+  fields:
+  - name: documents
+    type: array<Document>
+    description: A list of content items.
+  - name: tracking
+    type: Tracking
+    description: Group-level tracking object.
+- name: Document
+  role: entity
+  fields:
+  - name: pos
+    type: string
+    description: The index position of the item in the response.
+  - name: adType
+    type: string
+    description: Type of ad, e.g. "Brand", "Search".
+  - name: url
+    type: string
+    description: The click-through destination.
+  - name: thumbnail_url
+    type: string
+    description: Image asset URL for the recommendation.
+  - name: source_display_name
+    type: string
+    description: The brand or publisher name.
+  - name: content
+    type: string
+    description: The headline or title of the ad/article.
+  - name: target_domain
+    type: string
+    description: The domain where the user will land.
+  - name: cta
+    type: string
+    required: false
+    description: Call-to-action text.
+  - name: cpm
+    type: float
+    description: CPM value associated with the item.
+  - name: net_cpc
+    type: float
+    description: CPC value associated with the item.
+  - name: doc_tracking
+    type: DocTracking
+    description: Per-document tracking pixels and viewability logs.
+- name: Tracking
+  role: value-object
+  fields:
+  - name: reportServed
+    type: string (url)
+    description: >-
+      Fired once per served group; the pos value of the displayed ad is appended
+      as &pos=X-Y.
+- name: DocTracking
+  role: value-object
+  fields:
+  - name: pixels
+    type: array<string (url)>
+    description: >-
+      Impression pixels fired when the ad asset is injected into the chat UI.
+      May contain an ${AUCTION_MIN_TO_WIN} macro.
+  - name: on-viewed
+    type: array<string (url)>
+    description: >-
+      Viewability pixels; fired only when the ad enters the user's visible
+      viewport. Required for vCPM-billed campaigns.
+- name: Display
+  role: entity
+  present_when: response_types includes BrandDisplay
+  location: results.display
+  fields:
+  - name: html
+    type: string
+    description: Code snippet (usually a script tag) that loads the ad creative.
+  - name: div_id
+    type: string
+    description: Identifier of the ad's container element.
+  - name: placement_id
+    type: integer
+    description: Teads internal ID for the ad placement.
+  - name: width
+    type: integer
+    description: Intended width; 1 means fluid/responsive.
+  - name: height
+    type: integer
+    description: Intended height of the ad unit.
+  - name: outiframe_allowed
+    type: boolean
+    description: Whether the ad script may run in a cross-domain iframe.
+  - name: om
+    type: boolean
+    description: Open Measurement signal for third-party viewability support.
+- name: RecommendationRequest
+  role: input
+  transport: query string + JSON body
+  fields:
+  - name: key
+    in: query
+    type: string
+    required: true
+    description: Partner API Key.
+  - name: widgetJSId
+    in: query
+    type: string
+    required: true
+    description: UI placement identifier, e.g. APP_16. Fixes rec count and image size.
+  - name: contentUrl
+    in: query
+    type: string
+    required: conditional
+    description: Canonical URL of the host page, for contextual crawling (web).
+  - name: bundleUrl
+    in: query
+    type: string
+    required: conditional
+    description: URI-encoded app store URL (native apps).
+  - name: portalUrl
+    in: query
+    type: string
+    required: conditional
+    description: Context URL for native/internal surfaces; need not be crawlable.
+  - name: lang
+    in: query
+    type: string
+    required: conditional
+    description: ISO-639-1-alpha-2 language code; mandatory with bundleUrl/portalUrl.
+  - name: response_version
+    in: query
+    type: string
+    description: Must be "2.0".
+  - name: response_types
+    in: query
+    type: array<string>
+    description: catOrKeywords | embeddings | BrandDisplay.
+  - name: bf
+    in: query
+    type: float
+    required: false
+    description: Bid floor based on CPM.
+  - name: cors
+    in: query
+    type: boolean
+    description: Must be true for browser/chat environments.
+  - name: testMode
+    in: query
+    type: boolean
+    required: false
+    description: Development flag; keeps traffic out of production reporting.
+  - name: api_consent
+    in: query
+    type: integer
+    required: false
+    description: Set to 1 when the host app has obtained user consent.
+  - name: cnsntv2
+    in: query
+    type: string
+    required: conditional
+    description: IAB TCF v2.0 consent string; required in the EU.
+  - name: keywords
+    in: body
+    type: array<string>
+    description: High-intent terms from the current session.
+  - name: iabCategories
+    in: body
+    type: array<string>
+    description: IAB V1 content categories used to filter content types.
+  - name: chat
+    in: body
+    type: string
+    description: Free-text conversational context.
+relationships:
+- from: RecommendationResponse
+  to: ResultGroup
+  kind: has_many
+  via: results
+- from: ResultGroup
+  to: Document
+  kind: has_many
+  via: documents
+- from: ResultGroup
+  to: Tracking
+  kind: has_one
+  via: tracking
+- from: Document
+  to: DocTracking
+  kind: has_one
+  via: doc_tracking
+- from: RecommendationResponse
+  to: Display
+  kind: has_one
+  via: results.display
+  condition: response_types includes BrandDisplay
+id_fields:
+- field: widgetJSId
+  domain: placement
+  example_values: [APP_12, APP_16, SDK_1, MB_1, INT_MW_1]
+- field: placement_id
+  domain: Teads internal placement
+  type: integer
+- field: pid
+  domain: mobile SDK placement id
+  example_values: ['84242', '124859', '127546']
+- field: auctid
+  domain: conversion/click event id
+  note: >-
+    Carried by the tfpai first-party cookie on the Conversions API side; see
+    conventions/teads-conventions.yml.
+notes: >-
+  The Teads Conversions API (https://ca.teads.tv) has no published object
+  reference on the Teads developer portal, so no entities are recorded for it
+  here. Its documented shape is limited to standard conversion event names
+  (Purchase, AddToCart, Lead, ViewContent, InitiateCheckout) plus the tfpai /
+  tfpvi / tfpsi first-party identifiers.

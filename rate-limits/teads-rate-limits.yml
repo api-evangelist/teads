@@ -1,0 +1,52 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.teads.com/
+description: >-
+  Rate limiting posture for the Teads developer surfaces. An exhaustive read of
+  the Teads developer portal (all 93 pages in its sitemap were fetched and
+  searched on 2026-08-13) found NO published rate limit, quota, throttling
+  policy, 429 status documentation, or rate-limit response header. This is an
+  honest zero, not an unchecked field.
+limit_count: 0
+limits: []
+response_headers:
+  documented: false
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented for either
+    the In-Chat Recommendations API or the Conversions API, and neither endpoint
+    can be exercised anonymously to observe one.
+exhaustion_status_code: undocumented
+evidence:
+- url: https://developers.teads.com/sitemap.xml
+  status: 200
+  note: 93 documentation URLs enumerated and fetched.
+- url: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+  status: 200
+  note: >-
+    Full In-Chat API V2.0 technical specification — endpoint, headers, query
+    parameters, request body, response schema and tracking lifecycle — with no
+    rate limit, quota or throttling section.
+- url: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+  status: 200
+  note: >-
+    Configuration reference documents request timeouts as a client-side setting
+    but publishes no server-side limit.
+- url: https://ca.teads.tv/openapi.json
+  status: 404
+  note: No machine-readable contract to derive limits from.
+practical_controls:
+  note: >-
+    The only volume-shaping controls Teads documents are commercial and
+    placement-level rather than API-level — each widgetJSId fixes the number of
+    recommendations returned, and a bid floor (bf / floorPrice) constrains which
+    demand is eligible. Neither is a request-rate limit.
+  fields:
+  - widgetJSId
+  - bf
+  - floorPrice
+recommendation: >-
+  Teads should publish a rate limit for the In-Chat Recommendations API and emit
+  RateLimit-* / Retry-After headers. Conversational integrations call this
+  endpoint on every user turn, so an undocumented limit is a production risk for
+  every partner.

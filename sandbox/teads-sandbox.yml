@@ -1,0 +1,143 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+description: >-
+  Teads publishes a real test surface for its developer products. There is no
+  separate sandbox HOST — testing runs against the production endpoints using
+  provider-published test placement identifiers, test widget/installation keys,
+  a testMode request flag, and a hosted Validation Tool session that grades a
+  live integration. Every value below is published verbatim by Teads in its
+  developer documentation.
+mode:
+  separate_host: false
+  note: >-
+    No sandbox base URL exists. The In-Chat Recommendations API is exercised on
+    the production endpoint with testMode=true; the mobile SDKs are exercised on
+    production with Teads-issued test PIDs.
+environments:
+- name: Development
+  purpose: Local testing / QA
+  note: Use testMode=true to avoid polluting production reporting.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+- name: Staging
+  purpose: Pre-production validation
+  note: Uses the same endpoint as production with limited traffic.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+- name: Production
+  purpose: Live traffic and monetization
+  note: Requires an approved API key and an approved placement.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+test_modes:
+- api: Teads In-Chat Recommendations API
+  flag: testMode
+  location: query parameter
+  values:
+  - 'true'
+  env_var: TEADS_TEST_MODE
+  example_url: >-
+    https://mv.outbrain.com/Multivac/api/in-chat-recs?key=YOUR_KEY&contentUrl=test.com&widgetJSId=APP_12&cors=true&testMode=true
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Features/settings/
+- api: Teads Mobile SDKs (iOS / Android)
+  flag: enableDebug() / validation mode on TeadsAdPlacementSettings
+  note: >-
+    Debug + validation mode must be removed before shipping to production; the
+    docs warn about this explicitly.
+  source: https://developers.teads.com/docs/iOS-SDK/Troubleshooting/validation-tool/
+test_placements:
+- family: Media (video) placements
+  kind: test PID
+  values:
+  - id: '84242'
+    description: Landscape creatives only
+  - id: '127546'
+    description: Vertical creatives only
+  - id: '127547'
+    description: Square creatives only
+  - id: '128779'
+    description: Carousel creatives only
+  - id: '128780'
+    description: Multiple creative sizes and formats
+  source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+- family: Media Native placements
+  kind: test PID
+  values:
+  - id: '124859'
+    description: Display creatives only; native video ads with custom rendering
+  source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+- family: Feed placements
+  kind: test configuration
+  article_url: https://test-demo.outbrain.com
+  widget_ids:
+  - MB_1
+  - MB_2
+  - TEST_FEED
+  installation_keys:
+  - NANOWDGT01
+  - TESTKEY01
+  source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+- family: Recommendations API placements
+  kind: test configuration
+  article_url: https://test-demo.outbrain.com
+  widget_ids:
+  - SDK_1
+  - RECS_1
+  - TEST_RECS
+  installation_keys:
+  - NANOWDGT01
+  - TESTKEY01
+  source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+- family: Interstitial placements (AdMob / GAM mediation)
+  kind: test configuration
+  article_url: https://mobile-demo.outbrain.com
+  widget_ids:
+  - INT_MW_1
+  installation_keys:
+  - NANOWDGT01
+  source: https://developers.teads.com/docs/iOS-SDK/Getting-Started/test-pids/
+- family: In-Chat Recommendations API
+  kind: example widget id
+  widget_ids:
+  - APP_12
+  - APP_16
+  note: >-
+    Documented as example widgetJSId values; a production widget id is issued by
+    a Teads account representative. Each widget id fixes the recommendation count
+    and image size.
+  source: https://developers.teads.com/docs/Chatbot-AI-SDK/Getting-Started/integration-guide/
+validation_tooling:
+- name: Teads SDK Validation Tool
+  url: https://developers.teads.com/docs/iOS-SDK/Troubleshooting/validation-tool/
+  session_host: sdkvalidation.teads.tv
+  scope: Teads Media (video) placements only
+  not_supported:
+  - Media Native placements
+  - Feed placements
+  - Recommendations API
+  checks:
+  - Page/article URL valid (brand safety)
+  - GDPR / CCPA / GPP consent signals provided
+  - SDK version is current
+  - app-ads.txt includes teads.tv
+  - Teads tracking sent and received
+  - Media playback completes
+  - Creative resize supported
+  note: >-
+    Runs a fixed landscape video creative regardless of PID; the session URL is
+    printed to the IDE log and opened on a desktop browser.
+health_endpoints:
+- url: https://ca.teads.tv/health
+  status: 200
+  body: server is up
+  probed: '2026-08-13'
+  note: >-
+    Unauthenticated liveness endpoint on the Conversions API host. Not documented
+    by Teads; recorded here because it was observed live.
+warnings:
+- >-
+  Teads marks the test PIDs and configurations "for development and testing
+  purposes only. Never use them in your production environment."
+- >-
+  Validation/debug mode must be disabled before a production release.
+cross_links:
+  authentication: authentication/teads-authentication.yml
+  conventions: conventions/teads-conventions.yml
