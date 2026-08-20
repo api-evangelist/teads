@@ -54,6 +54,10 @@ apis:
   baseURL: https://ca.teads.tv
   tags:
   - Conversions
+  - Measurements
+  - Server-Side Events
+  tags_raw:
+  - Conversions
   - Measurement
   - Server-Side Events
   properties:
