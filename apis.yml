@@ -64,7 +64,7 @@ apis:
   humanURL: https://developers.teads.com/
   baseURL: https://ca.teads.tv
   tags:
-  - Conversions
+  - Conversion
   - Measurements
   - Server-Side Events
   tags_raw:
