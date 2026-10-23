@@ -39,32 +39,6 @@
     detected: '2026-10-14'
   status: not-a-workflow
   arazzo: null
-- slug: teads-fivetran
-  label: Fivetran
-  partner: fivetran
-  partner_name: Fivetran
-  type: marketplace
-  marketplace: fivetran-connectors
-  channel: elt-connector
-  evidence: https://fivetran.com/docs/connectors/applications/teads
-  source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: Fivetran connectors (fivetran.com/docs/connectors, docs-sitemap.xml + Partner-Built program)
-    spec_file: null
-    role: elt-connector:fivetran
-    registered_name: Teads
-    matched_domain: teads.com
-    matched_by: domain
-    detected_by: sweep-data-integration.py
-    detected: '2026-10-18'
-    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
-    connector_paths:
-    - connectors/applications/teads
-    vendor_link: https://www.teads.com/
-    builder: Fivetran
-  status: not-a-workflow
-  arazzo: null
 - slug: teads-npm-registry
   label: npm registry
   partner: npm
@@ -94,5 +68,82 @@
       24 months'
     detected_by: sweep-official-sdks.py
     detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: teads-fivetran
+  label: Fivetran
+  partner: fivetran
+  partner_name: Fivetran
+  type: marketplace
+  marketplace: fivetran-connectors
+  channel: elt-connector
+  evidence: https://fivetran.com/docs/connectors/applications/teads
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Fivetran connectors (fivetran.com/docs/connectors, docs-sitemap.xml + Partner-Built program)
+    spec_file: null
+    role: elt-connector:fivetran
+    registered_name: Teads
+    matched_domain: teads.com
+    matched_by: domain
+    detected_by: sweep-data-integration.py
+    detected: '2026-10-18'
+    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
+    connector_paths:
+    - connectors/applications/teads
+    vendor_link: https://www.teads.com/
+    builder: Fivetran
+  status: not-a-workflow
+  arazzo: null
+- slug: teads-pub-dev
+  label: pub.dev
+  partner: pub-dev
+  partner_name: pub.dev
+  category: official SDK (Dart/Flutter)
+  type: register
+  channel: package-registry
+  evidence: https://pub.dev/packages/teads_admob_adapter
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: pub.dev (public registry JSON)
+    spec_file: null
+    language: Dart/Flutter
+    packages:
+    - name: teads_admob_adapter
+      version: 1.0.0
+      released: '2022-12-16'
+      released_field: published
+      lapsed: true
+      page: https://pub.dev/packages/teads_admob_adapter
+      repo_leg: not required (verified publisher)
+      publisher_leg: verified-publisher:teads.com
+      matched_by: domain
+      abandoned: true
+    - name: teads_flutter
+      version: 1.1.0
+      released: '2026-09-30'
+      released_field: published
+      lapsed: false
+      page: https://pub.dev/packages/teads_flutter
+      repo_leg: not required (verified publisher)
+      publisher_leg: verified-publisher:teads.com
+      matched_by: domain
+    - name: teads_sdk_flutter
+      version: 1.0.5
+      released: '2022-12-16'
+      released_field: published
+      lapsed: true
+      page: https://pub.dev/packages/teads_sdk_flutter
+      repo_leg: not required (verified publisher)
+      publisher_leg: verified-publisher:teads.com
+      matched_by: domain
+      abandoned: true
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
   status: not-a-workflow
   arazzo: null
